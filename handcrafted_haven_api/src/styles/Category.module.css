@@ -1,0 +1,11 @@
+.categoriesImages {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    justify-content: space-evenly;
+}
+
+.item {
+    width: 30%;
+    text-align: center;
+}
