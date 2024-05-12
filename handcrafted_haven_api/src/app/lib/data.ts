@@ -16,3 +16,11 @@ export async function fetchProducts() {
     throw new Error('Failed to fetch products.');
   }
 }
+
+
+export async function fetchCategory() {
+  noStore();
+  
+  // SQL 
+  
+}
