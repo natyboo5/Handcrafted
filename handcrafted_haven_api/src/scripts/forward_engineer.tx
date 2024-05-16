@@ -1,0 +1,186 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema Handcrafted_Haven
+-- -----------------------------------------------------
+DROP SCHEMA IF EXISTS `Handcrafted_Haven` ;
+
+-- -----------------------------------------------------
+-- Schema Handcrafted_Haven
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `Handcrafted_Haven` DEFAULT CHARACTER SET utf8 ;
+USE `Handcrafted_Haven` ;
+
+-- -----------------------------------------------------
+-- Table `Handcrafted_Haven`.`product_categories`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Handcrafted_Haven`.`product_categories` ;
+
+CREATE TABLE IF NOT EXISTS `Handcrafted_Haven`.`product_categories` (
+  `product_category_id` INT NOT NULL AUTO_INCREMENT,
+  `product_category_name` VARCHAR(25) NOT NULL,
+  `product_category_URL` VARCHAR(100) NULL,
+  PRIMARY KEY (`product_category_id`))
+ENGINE = InnoDB
+COMMENT = '		';
+
+
+-- -----------------------------------------------------
+-- Table `Handcrafted_Haven`.`product_keywords`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Handcrafted_Haven`.`product_keywords` ;
+
+CREATE TABLE IF NOT EXISTS `Handcrafted_Haven`.`product_keywords` (
+  `product_keyword_id` INT NOT NULL AUTO_INCREMENT,
+  `product_keyword` VARCHAR(25) NOT NULL,
+  PRIMARY KEY (`product_keyword_id`))
+ENGINE = InnoDB
+COMMENT = '		';
+
+
+-- -----------------------------------------------------
+-- Table `Handcrafted_Haven`.`product_reviews`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Handcrafted_Haven`.`product_reviews` ;
+
+CREATE TABLE IF NOT EXISTS `Handcrafted_Haven`.`product_reviews` (
+  `product_review_id` INT NOT NULL AUTO_INCREMENT,
+  `product_review` VARCHAR(100) NOT NULL,
+  `product_rating` ENUM('1', '2', '3', '4', '5') NOT NULL,
+  PRIMARY KEY (`product_review_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Handcrafted_Haven`.`artisans`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Handcrafted_Haven`.`artisans` ;
+
+CREATE TABLE IF NOT EXISTS `Handcrafted_Haven`.`artisans` (
+  `artisan_id` INT NOT NULL AUTO_INCREMENT,
+  `artisans_fname` VARCHAR(25) NOT NULL,
+  `artisan_lname` VARCHAR(25) NOT NULL,
+  `artisan_email` VARCHAR(45) NOT NULL,
+  `artisan_phone` INT NOT NULL,
+  PRIMARY KEY (`artisan_id`))
+ENGINE = InnoDB
+COMMENT = '					';
+
+
+-- -----------------------------------------------------
+-- Table `Handcrafted_Haven`.`products`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Handcrafted_Haven`.`products` ;
+
+CREATE TABLE IF NOT EXISTS `Handcrafted_Haven`.`products` (
+  `product_id` INT NOT NULL AUTO_INCREMENT,
+  `product_name` VARCHAR(25) NOT NULL,
+  `product_price` INT NOT NULL,
+  `product_color` VARCHAR(15) NOT NULL,
+  `products_description` VARCHAR(150) NOT NULL,
+  `product_category_id` INT NOT NULL,
+  `product_keyword_id` INT NOT NULL,
+  `product_review_id` INT NOT NULL,
+  `artisan_id` INT NOT NULL,
+  PRIMARY KEY (`product_id`, `product_category_id`, `product_keyword_id`, `product_review_id`),
+  INDEX `fk_products_product_category_idx` (`product_category_id` ASC) VISIBLE,
+  INDEX `fk_products_product_keywords1_idx` (`product_keyword_id` ASC) VISIBLE,
+  INDEX `fk_products_product_reviews1_idx` (`product_review_id` ASC) VISIBLE,
+  INDEX `fk_products_artisans2_idx` (`artisan_id` ASC) VISIBLE,
+  CONSTRAINT `fk_products_product_category`
+    FOREIGN KEY (`product_category_id`)
+    REFERENCES `Handcrafted_Haven`.`product_categories` (`product_category_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_products_product_keywords1`
+    FOREIGN KEY (`product_keyword_id`)
+    REFERENCES `Handcrafted_Haven`.`product_keywords` (`product_keyword_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_products_product_reviews1`
+    FOREIGN KEY (`product_review_id`)
+    REFERENCES `Handcrafted_Haven`.`product_reviews` (`product_review_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_products_artisans2`
+    FOREIGN KEY (`artisan_id`)
+    REFERENCES `Handcrafted_Haven`.`artisans` (`artisan_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '		';
+
+
+-- -----------------------------------------------------
+-- Table `Handcrafted_Haven`.`customers`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Handcrafted_Haven`.`customers` ;
+
+CREATE TABLE IF NOT EXISTS `Handcrafted_Haven`.`customers` (
+  `customer_id` INT NOT NULL AUTO_INCREMENT,
+  `customer_fname` VARCHAR(45) NOT NULL,
+  `customer_lname` VARCHAR(45) NOT NULL,
+  `customer_email` VARCHAR(45) NOT NULL,
+  `customer_address` VARCHAR(45) NOT NULL,
+  `customer_city` VARCHAR(25) NOT NULL,
+  `customer_state` VARCHAR(25) NOT NULL,
+  `customer_postal_code` VARCHAR(15) NOT NULL,
+  PRIMARY KEY (`customer_id`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Handcrafted_Haven`.`customers_has_product_reviews`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Handcrafted_Haven`.`customers_has_product_reviews` ;
+
+CREATE TABLE IF NOT EXISTS `Handcrafted_Haven`.`customers_has_product_reviews` (
+  `customer_id` INT NOT NULL,
+  `product_review_id` INT NOT NULL,
+  `product_review_date` DATE NOT NULL,
+  PRIMARY KEY (`customer_id`, `product_review_id`),
+  INDEX `fk_customers_has_product_reviews_product_reviews1_idx` (`product_review_id` ASC) VISIBLE,
+  INDEX `fk_customers_has_product_reviews_customers1_idx` (`customer_id` ASC) VISIBLE,
+  CONSTRAINT `fk_customers_has_product_reviews_customers1`
+    FOREIGN KEY (`customer_id`)
+    REFERENCES `Handcrafted_Haven`.`customers` (`customer_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_customers_has_product_reviews_product_reviews1`
+    FOREIGN KEY (`product_review_id`)
+    REFERENCES `Handcrafted_Haven`.`product_reviews` (`product_review_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `Handcrafted_Haven`.`order_details`
+-- -----------------------------------------------------
+DROP TABLE IF EXISTS `Handcrafted_Haven`.`order_details` ;
+
+CREATE TABLE IF NOT EXISTS `Handcrafted_Haven`.`order_details` (
+  `order_id` INT NOT NULL AUTO_INCREMENT,
+  `order_date` DATE NOT NULL,
+  `quantity` INT NOT NULL,
+  `unit_cost` DECIMAL(10,2) NOT NULL,
+  `total_cost` DECIMAL(10,2) NOT NULL,
+  `customer_id` INT NOT NULL,
+  PRIMARY KEY (`order_id`),
+  INDEX `fk_order_details_customers1_idx` (`customer_id` ASC) VISIBLE,
+  CONSTRAINT `fk_order_details_customers1`
+    FOREIGN KEY (`customer_id`)
+    REFERENCES `Handcrafted_Haven`.`customers` (`customer_id`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB
+COMMENT = '	';
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
