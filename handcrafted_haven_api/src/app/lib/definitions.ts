@@ -12,3 +12,17 @@ export type Category = {
   name: string;
   URL: string;
 };
+
+export type CategoryCrafts = {
+  id: number;
+  craftName: string;
+  description: string;
+  price: string;
+  URL: string;
+  category: string;
+}
+
+export type Artisan = {
+  id: number;
+  artisanName: string;
+}
