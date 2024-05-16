@@ -24,3 +24,12 @@ export async function fetchCategory() {
   // SQL 
   
 }
+
+
+
+export async function fetchCategoryCrafts(category: string) {
+  noStore();
+  
+  // SQL 
+  
+}
