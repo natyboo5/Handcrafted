@@ -17,9 +17,9 @@ async function seedProductCategories(client) {
     // Create the "product_categories" table if it doesn't exist
     const createTable = await client.sql`
     CREATE TABLE IF NOT EXISTS product_categories (
-      product_category_id UUID DEFAULT uuid_generate_v4() NOT NULL PRIMARY KEY,
+      product_category_id UUID DEFAULT uuid_generate_v4() PRIMARY KEY,
       product_category_name VARCHAR(25) NOT NULL,
-      product_category_URL VARCHAR(100) NULL,
+      product_category_URL VARCHAR(100) NOT NULL,
     );
     `;
 
@@ -27,14 +27,14 @@ async function seedProductCategories(client) {
 
     // Insert data into the "product_categories" table
     const insertedProductCategories = await Promise.all(
-      product_categories.map(async (user) => {
-        const hashedPassword = await bcrypt.hash(user.password, 10);
-        return client.sql`
+      product_categories.map((product_category) => client.sql `
         INSERT INTO product_categories (product_category_id, product_category_name, product_category_URL)
-        VALUES (${user.product_category_id}, ${user.product_category_name}, ${user.product_category_URL})
-        ON CONFLICT (id) DO NOTHING;
-      `;
-      }),
+        VALUES (${product_category.product_category_id}, 
+          ${product_category.product_category_name}, 
+          ${product_category.product_category_URL})
+        ON CONFLICT (product_category_id) DO NOTHING;
+      `,
+      ),
     );
 
     console.log(`Seeded ${insertedProductCategories.length} product_categories`);
