@@ -24,5 +24,9 @@ export type CategoryCrafts = {
 
 export type Artisan = {
   id: number;
-  artisanName: string;
+  artisanFName: string;
+  artisanLName: string;
+  artisanEmail: string;
+  artisanPhone: string;
+  artisanInfo: string;
 }

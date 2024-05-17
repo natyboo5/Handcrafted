@@ -62,8 +62,8 @@ export async function ArtisanList( {artisan}: {artisan: Artisan} ) {
     return (
         <>  
             <Link href={`#`}>
-                <p className='text-center p-3'>
-                    {artisan.artisanName}
+                <p className='text-center p-3 block'>
+                    {`${artisan.artisanFName} ${artisan.artisanLName}`}
                 </p>
             </Link>
         </>
